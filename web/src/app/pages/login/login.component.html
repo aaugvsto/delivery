@@ -1,0 +1,18 @@
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="bg-light rounded border border-1">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="p-4">
+            <div class="mb-2">
+                <label for="user" class="form-label">Usuário</label>
+                <input formControlName="login"
+                class="form-control" type="text" id="user">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Senha</label>
+                <input formControlName="password" class="form-control" type="text" id="password">
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary">Entrar</button>
+            </div>
+        </form>
+    </div>
+</div>
