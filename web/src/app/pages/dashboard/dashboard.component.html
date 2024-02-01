@@ -1,0 +1,14 @@
+<div class="row align-items-start text-center">
+    <div class="col border me-3 rounded" style="min-height: 500vh;" *ngFor="let coluna of colunas">
+        <div class="mb-2 mt-2">
+            <span class="fs-5"> {{ coluna.nome }}</span>
+        </div>
+        <div *ngFor="let item of coluna.pedidos">
+           <app-card-pedido
+            [id]="item.id"
+            [cliente]="item.cliente"
+            [status]="item.status"
+            ></app-card-pedido> 
+        </div>
+    </div>
+</div>
