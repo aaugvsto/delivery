@@ -18,7 +18,9 @@ export default abstract class Service<T extends Entity> implements IService<T>{
     get(id: number): Promise<T> {
         throw new Error("Method not implemented.");
     }
-    getAll(): Promise<T[]> {
-        return this._repository.find();
+    async getAll(): Promise<T[]> {    
+        
+        let itens = await this._repository.find();
+        return itens;
     }
 } 

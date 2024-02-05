@@ -1,13 +1,13 @@
 import Controller from "./base/base.controller";
-import Restaurante from "../../infra/data_access/entities/restaurante";
 import IService from "../../domain/interfaces/iServices/base/iService";
 import { IRouter } from "express";
+import Cliente from "../../infra/data_access/entities/cliente";
 
-export default class RestauranteController extends Controller<Restaurante> {
+export default class ClienteController extends Controller<Cliente> {
 
     constructor(
         router: IRouter,
-        service: IService<Restaurante>
+        service: IService<Cliente>
     ) {
         super(router, service);
         this.setCustomRoutes();
