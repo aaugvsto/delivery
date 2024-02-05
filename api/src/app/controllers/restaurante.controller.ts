@@ -9,8 +9,8 @@ export default class RestauranteController {
         private restauranteService: IRestauranteService,
         ) { }
 
-    getRoutes(){
-        this.router.get("/", async (req, res) => {
+    getRoutes = () => {
+        this.router.get("/restaurantes", async (req, res) => {
             try {
                 const restaurantes = await this.restauranteService.getAll();
                 res.status(200).json(restaurantes);

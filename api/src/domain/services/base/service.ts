@@ -1,13 +1,13 @@
+import { Repository } from "typeorm";
 import Entity from "../../../infra/data_access/entities/base/entity";
-import IRepository from "../../interfaces/iRepositories/base/iRepository";
 import IService from "../../interfaces/iServices/base/iService";
 
 export default abstract class Service<T extends Entity> implements IService<T>{
 
-    constructor(protected _repository: IRepository<T>) { }
+    constructor(protected _repository: Repository<T>) { }
 
     create(entity: T): Promise<T> {
-        return this._repository.create(entity);
+        throw new Error("Method not implemented.");
     }
     update(entity: T): Promise<T> {
         throw new Error("Method not implemented.");
@@ -19,6 +19,6 @@ export default abstract class Service<T extends Entity> implements IService<T>{
         throw new Error("Method not implemented.");
     }
     getAll(): Promise<T[]> {
-        return this._repository.getAll();
+        return this._repository.find();
     }
 } 

@@ -1,4 +1,4 @@
-import Entity from "../../../entities/base/entity";
+import Entity from "../../../../infra/data_access/entities/base/entity";
 
 export default interface IService<T extends Entity>{
     create(entity: T): Promise<T>;
