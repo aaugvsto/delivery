@@ -1,13 +1,15 @@
 import { Router } from "express";
 import IRestauranteService from "../../domain/interfaces/iServices/iRestauranteService";
+import Restaurante from "../../infra/data_access/entities/restaurante";
 
 export default class RestauranteController {
+
     constructor(
         private router: Router,
-        public restauranteService: IRestauranteService
-    ){}
+        private restauranteService: IRestauranteService,
+        ) { }
 
-    setRoutes(){
+    getRoutes(){
         this.router.get("/", async (req, res) => {
             try {
                 const restaurantes = await this.restauranteService.getAll();
@@ -16,5 +18,7 @@ export default class RestauranteController {
                 res.status(500).json(error);
             }
         });
+
+        return this.router;
     }
 }
