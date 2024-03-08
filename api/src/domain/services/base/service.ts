@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { FindOptionsWhere, Repository } from "typeorm";
 import Entity from "../../../infra/data_access/entities/base/entity";
 import IService from "../../interfaces/iServices/base/iService";
 
@@ -6,21 +6,26 @@ export default abstract class Service<T extends Entity> implements IService<T>{
 
     constructor(protected _repository: Repository<T>) { }
 
-    async create(entity: T): Promise<T> {
+    async createOrUpdate(entity: T): Promise<T> {
         await this._repository.save(entity)
         return entity
     }
 
-    update(entity: T): Promise<T> {
-        throw new Error("Method not implemented.");
+    async delete(id: number): Promise<boolean> {
+        let entityToRemove = await this.get(id);
+
+        if (!entityToRemove) return false;
+
+        await this._repository.remove(entityToRemove);
+        return true;
     }
 
-    delete(id: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
-    }
-
-    get(id: number): Promise<T> {
-        throw new Error("Method not implemented.");
+    async get(id: number): Promise<T | null> {
+        return await this._repository.findOne({
+            where: { 
+                id: id 
+            }  as FindOptionsWhere<T>
+        });
     }
 
     async getAll(): Promise<T[]> {

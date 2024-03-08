@@ -1,9 +1,8 @@
 import Entity from "../../../../infra/data_access/entities/base/entity";
 
 export default interface IService<T extends Entity>{
-    create(entity: T): Promise<T>;
-    update(entity: T): Promise<T>;
+    createOrUpdate(entity: T): Promise<T>;
     delete(id: number): Promise<boolean>;
-    get(id: number): Promise<T>;
+    get(id: number): Promise<T | null>;
     getAll(): Promise<T[]>;
 }
