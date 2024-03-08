@@ -9,23 +9,26 @@ import ClienteController from "./controllers/cliente.controller";
 import PedidoController from "./controllers/pedido.controller";
 import PedidoService from "../domain/services/pedido.service";
 import ClienteService from "../domain/services/cliente.service.";
+import { json } from "stream/consumers";
 
 export default class Startup {
 
-    static Start = () => {
+    static Start = async () => {
         const database = this.getDatabase();
-        this.initDatabase(database);
+        await this.initDatabase(database);
         this.initRoutes(express(), database);
     }
 
-    private static initDatabase(databaseEngine: DataSource){ 
-        databaseEngine.initialize().then(() => {
-            console.log("Database initialized successfully!");
-          })
-          .catch((error) => {
-            console.log("Database failed to initialize!");
-            console.log(error);
-          });
+    private static async initDatabase(databaseEngine: DataSource){ 
+        await databaseEngine
+            .initialize()
+            .then(() => {
+                console.log("Database initialized successfully!");
+            })
+            .catch((error) => {
+                console.log("Database failed to initialize!");
+                console.log(error);
+            });
     }
 
     private static initRoutes(routesEngine: Express, databaseEngine: DataSource){
@@ -34,6 +37,8 @@ export default class Startup {
         const clienteController = new ClienteController(express.Router(), new ClienteService(databaseEngine.getRepository(Cliente)));
         const pedidoController = new PedidoController(express.Router(), new PedidoService(databaseEngine.getRepository(Pedido)));
         const restauranteController = new RestauranteController(express.Router(), new RestauranteService(databaseEngine.getRepository(Restaurante)));
+
+        routesEngine.use(express.json())
         
         routesEngine.use('/restaurantes', restauranteController.getRoutes());
         routesEngine.use('/pedidos', pedidoController.getRoutes());
@@ -55,7 +60,7 @@ export default class Startup {
     private static getDatabase(): DataSource{
         return new DataSource({
             type: "sqlite",
-            database: "test",
+            database: "test.sqlite",
             entities: [
               Restaurante
               ,Pedido

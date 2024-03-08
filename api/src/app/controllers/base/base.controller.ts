@@ -24,8 +24,9 @@ export default abstract class Controller<T extends Entity> implements IControlle
 
         this.router.post("/", async (req, res) => {
             try {
-                let restaurantes = await this.entityService.getAll();
-                res.status(200).json(restaurantes);
+                let entity: T = req.body;
+                await this.entityService.create(entity);
+                res.status(200).json(entity);
             } catch (error) {
                 res.status(500).json(error);
             }
