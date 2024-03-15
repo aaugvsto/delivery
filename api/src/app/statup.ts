@@ -9,7 +9,7 @@ import ClienteController from "./controllers/cliente.controller";
 import PedidoController from "./controllers/pedido.controller";
 import PedidoService from "../domain/services/pedido.service";
 import ClienteService from "../domain/services/cliente.service.";
-import { json } from "stream/consumers";
+import cors from "cors";
 
 export default class Startup {
 
@@ -38,6 +38,7 @@ export default class Startup {
         const pedidoController = new PedidoController(express.Router(), new PedidoService(databaseEngine.getRepository(Pedido)));
         const restauranteController = new RestauranteController(express.Router(), new RestauranteService(databaseEngine.getRepository(Restaurante)));
 
+        routesEngine.use(cors());
         routesEngine.use(express.json())
         
         routesEngine.use('/restaurantes', restauranteController.getRoutes());
