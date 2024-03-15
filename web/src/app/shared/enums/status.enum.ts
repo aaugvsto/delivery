@@ -1,6 +1,6 @@
 export enum Status {
-    Novo = "Novo",
-    EmPreparo = "Em preparo",
-    Enviado = "Enviado",
-    Finalizado = "Finalizado",
+    Novo = 1,
+    EmPreparo = 2,
+    Enviado = 3,
+    Finalizado = 4,
 }

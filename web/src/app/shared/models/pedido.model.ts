@@ -1,7 +1,7 @@
 export interface Pedido {
     id: number;
     cliente: string;
-    status: string;
+    status: number;
     // endereco: string;
     // numero: string;
     // complemento: string;

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Status } from 'src/app/shared/enums/status.enum';
@@ -11,39 +12,48 @@ import { Pedido } from 'src/app/shared/models/pedido.model';
 })
 export class DashboardComponent implements OnInit {
   
-  colunas: Column[] = [
+  colunas = [
     {
-      nome: Status.Novo,
+      idStatus: Status.Novo,
+      nome: "Novo",
       pedidos: [
         {
           id: 1,
+          cliente: 'João',
+          status: Status.Novo
+        },
+        {
+          id: 7,
           cliente: 'João',
           status: Status.Novo
         }
       ]
     },
     {
-      nome: Status.EmPreparo,
+      idStatus: Status.EmPreparo,
+      nome: "Em preparo",
       pedidos: [
         {
-          id: 1,
+          id: 2,
           cliente: 'João',
           status: Status.EmPreparo
         }
       ]
     },
     {
-      nome: Status.Enviado,
+      idStatus: Status.Enviado,
+      nome: "Enviado",
       pedidos: [
         {
-          id: 1,
+          id: 3,
           cliente: 'João',
           status: Status.Enviado
         },
       ]
     },
     {
-      nome: Status.Finalizado,
+      idStatus: Status.Finalizado,
+      nome: "Finalizado",
       pedidos: [
         {
           id: 1,
@@ -53,12 +63,33 @@ export class DashboardComponent implements OnInit {
       ]
     }
   ]
+  colunas$ = new BehaviorSubject<Column[]>(this.colunas);
 
-  popout$ = new BehaviorSubject<number>(0);
+  constructor(private http: HttpClient){}
 
-  constructor() { }
-  
   ngOnInit(): void {
-    console.log(this.colunas)
+    this.colunas$.subscribe();
+  }
+
+  onMovePedido(id: number){
+    this.http.
+      put(`http://localhost:5454/pedidos/${id}/AtualizaStatus`, null)
+      .subscribe((res: any) => {
+
+        // let colunas = this.colunas;
+
+        // let indexPedido = this.colunas
+        //   .find(x => x.idStatus == (res.status - 1))
+        //   ?.pedidos.findIndex(x => x.id == id)
+
+        // let pedido = this.colunas
+        // .find(x => x.idStatus == (res.status - 1))
+        // ?.pedidos[indexPedido!]
+
+        //   colunas
+        //   .find(x => x.idStatus == (res.status - 1))
+        //   ?.pedidos.splice(pedidoIndex!, 0)
+
+      })
   }
 }
