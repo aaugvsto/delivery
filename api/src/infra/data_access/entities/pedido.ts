@@ -9,23 +9,27 @@ import
 export default class Pedido extends Entity {
 
     @Column()
-    nome: string
+    nome: string;
 
     @Column()
-    valor: number
+    valor: number;
 
     @Column()
-    data: Date
+    data: Date;
 
     @Column()
-    clienteId: number
+    clienteId: number;
 
-    constructor(id: number, cretionDate: Date, updateDate: Date, nome: string, valor: number, data: Date, clienteId: number) {
+    @Column({nullable: true})
+    status: number;
+
+    constructor(id: number, cretionDate: Date, updateDate: Date, nome: string, valor: number, data: Date, clienteId: number, status: number) {
         super(id, cretionDate, updateDate);
         
         this.nome = nome;
         this.valor = valor;
         this.data = data;
         this.clienteId = clienteId;
+        this.status = status;
     }
 }

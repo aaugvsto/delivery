@@ -7,6 +7,11 @@ export default abstract class Service<T extends Entity> implements IService<T>{
     constructor(protected _repository: Repository<T>) { }
 
     async createOrUpdate(entity: T): Promise<T> {
+        if(!entity.id)
+            entity.creationDate = new Date();
+
+        entity.updateDate = new Date();
+
         await this._repository.save(entity)
         return entity
     }
