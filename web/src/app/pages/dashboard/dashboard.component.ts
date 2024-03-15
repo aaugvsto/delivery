@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, shareReplay } from 'rxjs';
+import { PedidosService } from 'src/app/services/pedidos.service';
 import { Status } from 'src/app/shared/enums/status.enum';
 import { Column } from 'src/app/shared/models/column.model';
 import { Pedido } from 'src/app/shared/models/pedido.model';
@@ -12,83 +13,74 @@ import { Pedido } from 'src/app/shared/models/pedido.model';
 })
 export class DashboardComponent implements OnInit {
   
-  colunas = [
+  colunas: Column[] = [
     {
       idStatus: Status.Novo,
       nome: "Novo",
       pedidos: [
-        {
-          id: 1,
-          cliente: 'João',
-          status: Status.Novo
-        },
-        {
-          id: 7,
-          cliente: 'João',
-          status: Status.Novo
-        }
       ]
     },
     {
       idStatus: Status.EmPreparo,
       nome: "Em preparo",
       pedidos: [
-        {
-          id: 2,
-          cliente: 'João',
-          status: Status.EmPreparo
-        }
       ]
     },
     {
       idStatus: Status.Enviado,
       nome: "Enviado",
       pedidos: [
-        {
-          id: 3,
-          cliente: 'João',
-          status: Status.Enviado
-        },
       ]
     },
     {
       idStatus: Status.Finalizado,
       nome: "Finalizado",
       pedidos: [
-        {
-          id: 1,
-          cliente: 'João',
-          status: Status.Finalizado
-        }
       ]
     }
   ]
-  colunas$ = new BehaviorSubject<Column[]>(this.colunas);
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient, private pedidoService: PedidosService){
+  }
 
   ngOnInit(): void {
-    this.colunas$.subscribe();
+
+    this.pedidoService.getPedidos().subscribe(pedidos => {
+      pedidos.forEach(element => {
+        let coluna = this.colunas.find(c => c.idStatus === element.status);
+        if(coluna){
+          element.dscProxStatus =  element.status == Status.Novo ? "Em preparo" : element.status == Status.EmPreparo ? "Enviado" : element.status == Status.Enviado ? "Finalizado" : "Novo";
+          coluna.pedidos.push(element);
+        }
+      });
+    })
+
   }
 
   onMovePedido(id: number){
-    this.http.
-      put(`http://localhost:5454/pedidos/${id}/AtualizaStatus`, null)
+    this.http
+      .put(`http://localhost:5454/pedidos/${id}/AtualizaStatus`, null)
+      //.pipe(shareReplay())
       .subscribe((res: any) => {
+        let pedido : Pedido | undefined;
 
-        // let colunas = this.colunas;
+        for(let i = 0; i < this.colunas.length; i++){
+          const coluna = this.colunas[i];
 
-        // let indexPedido = this.colunas
-        //   .find(x => x.idStatus == (res.status - 1))
-        //   ?.pedidos.findIndex(x => x.id == id)
+          if(!pedido){
+            pedido = coluna.pedidos.find(p => p.id === id);
+          }
+            
+          if(pedido){
+            coluna.pedidos = coluna.pedidos.filter(p => p.id !== id);
+          }
 
-        // let pedido = this.colunas
-        // .find(x => x.idStatus == (res.status - 1))
-        // ?.pedidos[indexPedido!]
-
-        //   colunas
-        //   .find(x => x.idStatus == (res.status - 1))
-        //   ?.pedidos.splice(pedidoIndex!, 0)
+          if(pedido && coluna.idStatus === res.status){
+            pedido.status = res.status;
+            coluna.pedidos.push(pedido);
+            break;
+          }
+        }
 
       })
   }

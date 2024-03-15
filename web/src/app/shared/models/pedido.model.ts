@@ -1,7 +1,11 @@
-export interface Pedido {
+import { Status } from "../enums/status.enum";
+
+export class Pedido {
     id: number;
     cliente: string;
     status: number;
+    dscProxStatus: string;
+
     // endereco: string;
     // numero: string;
     // complemento: string;
