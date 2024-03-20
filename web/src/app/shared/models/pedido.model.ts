@@ -4,7 +4,6 @@ export class Pedido {
     id: number;
     cliente: string;
     status: number;
-    dscProxStatus: string;
 
     // endereco: string;
     // numero: string;

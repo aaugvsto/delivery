@@ -1,13 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Column } from '../../models/column.model';
-import { Pedido } from '../../models/pedido.model';
+import { Pedido } from '../../../../shared/models/pedido.model';
 
 @Component({
   selector: 'app-card-pedido',
-  templateUrl: './card-pedido.component.html',
-  styleUrls: ['./card-pedido.component.css']
+  templateUrl: './card-pedido.component.html'
 })
 export class CardPedidoComponent {
 

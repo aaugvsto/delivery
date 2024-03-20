@@ -1,0 +1,17 @@
+<div class="card mb-4 p-2">
+    <div class="card-body p-0">
+      <h5 class="card-title">{{ pedido.cliente }}</h5>
+    </div>
+    <div class="card- p-2">
+        <div class="d-flex flex-column text-start">
+            <span class="mb-1">Código: {{ pedido.id }}</span>
+            <button *ngIf="pedido.status != 4" class="btn btn-secondary fw-bold" style="color: #fff;" (click)="moverPedido()">
+               {{(pedido.status == 1 ? "Em preparo" : pedido.status == 2 ? "Enviado" : pedido.status == 3 ? "Finalizado" : "Novo") }} 
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button *ngIf="pedido.status == 4" class="btn btn-warning" disabled>
+                Finalizado <i class="fa-solid fa-check"></i>
+            </button>
+        </div>
+    </div>
+</div>

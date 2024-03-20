@@ -9,7 +9,6 @@ import { Pedido } from 'src/app/shared/models/pedido.model';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   
@@ -48,10 +47,9 @@ export class DashboardComponent implements OnInit {
     this.pedidoService.getPedidos().subscribe(pedidos => {
       pedidos.forEach(element => {
         let coluna = this.colunas.find(c => c.idStatus === element.status);
-        if(coluna){
-          element.dscProxStatus =  element.status == Status.Novo ? "Em preparo" : element.status == Status.EmPreparo ? "Enviado" : element.status == Status.Enviado ? "Finalizado" : "Novo";
+        
+        if(coluna)
           coluna.pedidos.push(element);
-        }
       });
     })
 
@@ -60,12 +58,12 @@ export class DashboardComponent implements OnInit {
   onMovePedido(id: number){
     this.http
       .put(`http://localhost:5454/pedidos/${id}/AtualizaStatus`, null)
-      //.pipe(shareReplay())
+      .pipe(shareReplay())
       .subscribe((res: any) => {
         let pedido : Pedido | undefined;
 
         for(let i = 0; i < this.colunas.length; i++){
-          const coluna = this.colunas[i];
+          let coluna = this.colunas[i];
 
           if(!pedido){
             pedido = coluna.pedidos.find(p => p.id === id);

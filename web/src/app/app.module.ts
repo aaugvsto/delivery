@@ -3,26 +3,26 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './pages/login/login.component';
+import { LoginComponent } from './pages/login/pages/login.component';
 import { HttpClientModule } from  '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FramePageComponent } from './shared/components/frame-page/frame-page.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { CardPedidoComponent } from './shared/components/card-pedido/card-pedido.component';
+import { DashboardComponent } from './pages/dashboard/pages/dashboard.component';
+import { CardPedidoComponent } from './pages/dashboard/components/card-pedido/card-pedido.component';
+import { LoginModule } from './pages/login/login.module';
+import { DashboardModule } from './pages/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     FramePageComponent,
-    DashboardComponent,
-    CardPedidoComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    LoginModule,
+    DashboardModule,
     HttpClientModule,
-    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
