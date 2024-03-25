@@ -13,53 +13,29 @@ import { BehaviorSubject, shareReplay } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   
-  colunas: Column[] = [
-    {
-      idStatus: Status.Novo,
-      nome: "Novo",
-      pedidos: [
-      ]
-    },
-    {
-      idStatus: Status.EmPreparo,
-      nome: "Em preparo",
-      pedidos: [
-      ]
-    },
-    {
-      idStatus: Status.Enviado,
-      nome: "Enviado",
-      pedidos: [
-      ]
-    },
-    {
-      idStatus: Status.Finalizado,
-      nome: "Finalizado",
-      pedidos: [
-      ]
-    }
-  ]
-
-  colunas$: BehaviorSubject<Column[]> = new BehaviorSubject<Column[]>(this.colunas)
+  colunas$: BehaviorSubject<Column[]> = new BehaviorSubject<Column[]>([
+    { id: Status.Novo,        textoDeExibicao: "Novo",       pedidos: [] },
+    { id: Status.EmPreparo,   textoDeExibicao: "Em preparo", pedidos: [] },
+    { id: Status.Enviado,     textoDeExibicao: "Enviado",    pedidos: [] },
+    { id: Status.Finalizado,  textoDeExibicao: "Finalizado", pedidos: [] }
+  ]);
 
   constructor(private http: HttpClient, private pedidoService: PedidosService){
   }
 
   ngOnInit(): void {
 
-    this.colunas$
-      .subscribe()
-
-    this.pedidoService.getPedidos()
-    .pipe(shareReplay())  
+    this.pedidoService.getPedidos()  
     .subscribe(pedidos => {
-      let colunas = this.colunas;
-      pedidos.forEach(element => {
-        let coluna = colunas.find(c => c.idStatus === element.status);
-        
+      let colunas = this.colunas$.getValue();
+
+      pedidos.forEach(pedido => {
+        let coluna = colunas.find(c => c.id === pedido.status);
+
         if(coluna)
-          coluna.pedidos.push(element);
+        coluna.pedidos.push(pedido);
       });
+      
       this.colunas$.next(colunas);
     })
 
@@ -69,15 +45,15 @@ export class DashboardComponent implements OnInit {
     this.http
       .put(`${environment.apiUrl}/pedidos/${id}/AtualizaStatus`, null)
       .subscribe((res: any) => {
-        let colunas = this.colunas;
-        for(let i = 0; i < this.colunas.length; i++){
-          for(let j = 0; j < this.colunas[i].pedidos.length; j++){
-            if(this.colunas[i].pedidos[j].id === id){
+        let colunas = this.colunas$.getValue();
+        for(let i = 0; i < colunas.length; i++){
+          for(let j = 0; j < colunas[i].pedidos.length; j++){
+            if(colunas[i].pedidos[j].id === id){
               let pedido = colunas[i].pedidos[j];
               pedido.status = res.status;
               colunas[i + 1].pedidos.push(pedido);
               colunas[i].pedidos.splice(j, 1);
-              return this.colunas$.next(colunas);
+              return this.colunas$.next([...colunas]);
             }
           }
         }

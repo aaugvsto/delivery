@@ -1,7 +1,7 @@
 import { Pedido } from "./pedido.model";
 
 export interface Column {
-    nome: string,
-    idStatus: number,
+    id: number,
+    textoDeExibicao: string,
     pedidos: Pedido[],
 }

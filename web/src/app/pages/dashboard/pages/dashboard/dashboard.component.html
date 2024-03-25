@@ -1,7 +1,7 @@
 <div class="row align-items-start text-center">
     <div class="col border me-3 rounded" style="min-height: 500vh; background-color: white;" *ngFor="let coluna of colunas$ | async">
         <div class="mb-2 mt-2">
-            <span class="fs-5 fw-bold"> {{ coluna.nome }}</span>
+            <span class="fs-5 fw-bold"> {{ coluna.textoDeExibicao }}</span>
         </div>
         <div *ngFor="let item of coluna.pedidos">
            <app-card-pedido
