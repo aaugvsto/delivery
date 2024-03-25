@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, shareReplay } from 'rxjs';
 import { PedidosService } from 'src/app/services/pedidos.service';
 import { Status } from 'src/app/shared/enums/status.enum';
 import { Column } from 'src/app/shared/models/column.model';
-import { Pedido } from 'src/app/shared/models/pedido.model';
+import { environment } from 'src/enviroment/enviroment.dev';
+import { ChangeDetectorRef } from '@angular/core';
+import { BehaviorSubject, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,47 +40,47 @@ export class DashboardComponent implements OnInit {
     }
   ]
 
+  colunas$: BehaviorSubject<Column[]> = new BehaviorSubject<Column[]>(this.colunas)
+
   constructor(private http: HttpClient, private pedidoService: PedidosService){
   }
 
   ngOnInit(): void {
 
-    this.pedidoService.getPedidos().subscribe(pedidos => {
+    this.colunas$
+      .subscribe()
+
+    this.pedidoService.getPedidos()
+    .pipe(shareReplay())  
+    .subscribe(pedidos => {
+      let colunas = this.colunas;
       pedidos.forEach(element => {
-        let coluna = this.colunas.find(c => c.idStatus === element.status);
+        let coluna = colunas.find(c => c.idStatus === element.status);
         
         if(coluna)
           coluna.pedidos.push(element);
       });
+      this.colunas$.next(colunas);
     })
 
   }
 
   onMovePedido(id: number){
     this.http
-      .put(`http://localhost:5454/pedidos/${id}/AtualizaStatus`, null)
-      .pipe(shareReplay())
+      .put(`${environment.apiUrl}/pedidos/${id}/AtualizaStatus`, null)
       .subscribe((res: any) => {
-        let pedido : Pedido | undefined;
-
+        let colunas = this.colunas;
         for(let i = 0; i < this.colunas.length; i++){
-          let coluna = this.colunas[i];
-
-          if(!pedido){
-            pedido = coluna.pedidos.find(p => p.id === id);
-          }
-            
-          if(pedido){
-            coluna.pedidos = coluna.pedidos.filter(p => p.id !== id);
-          }
-
-          if(pedido && coluna.idStatus === res.status){
-            pedido.status = res.status;
-            coluna.pedidos.push(pedido);
-            break;
+          for(let j = 0; j < this.colunas[i].pedidos.length; j++){
+            if(this.colunas[i].pedidos[j].id === id){
+              let pedido = colunas[i].pedidos[j];
+              pedido.status = res.status;
+              colunas[i + 1].pedidos.push(pedido);
+              colunas[i].pedidos.splice(j, 1);
+              return this.colunas$.next(colunas);
+            }
           }
         }
-
       })
   }
 }
