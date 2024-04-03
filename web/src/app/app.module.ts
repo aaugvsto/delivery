@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './pages/login/pages/login.component';
 import { HttpClientModule } from  '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FramePageComponent } from './shared/components/frame-page/frame-page.component';
-import { DashboardComponent } from './pages/dashboard/pages/dashboard/dashboard.component';
-import { CardPedidoComponent } from './pages/dashboard/components/card-pedido/card-pedido.component';
+import { FramePageComponent } from './shared/pages/frame-page/frame-page.component';
 import { LoginModule } from './pages/login/login.module';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CardapioModule } from './pages/cardapio/cardapio.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +20,8 @@ import { DashboardModule } from './pages/dashboard/dashboard.module';
     LoginModule,
     DashboardModule,
     HttpClientModule,
+    NgbModule,
+    CardapioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

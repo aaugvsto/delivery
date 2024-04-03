@@ -1,0 +1,28 @@
+<nav class="navbar navbar-light bg-warning" style="height: 4vh;">
+    <div class="container-fluid">
+        <i style="font-size: 24px;" class="fa-solid fa-burger text-white"></i>
+    </div>
+</nav>
+<div class="container-flex">
+    <div class="row g-0" style="height: 96vh;">
+        <div class="col-1 bg-dark">
+            <div *ngFor="let item of menus" class="menu-item mb-2" [ngbTooltip]="item.nome">
+                <ng-container *ngIf="item.novaAba; else abaAtual">
+                    <a [routerLink]="item.route" target="_blank" class="p-2">
+                        <i style="font-size: 30px;" [ngClass]="item.faIcon"></i>
+                    </a>
+                </ng-container>
+                <ng-template #abaAtual>
+                    <a [routerLink]="item.route" class="p-2">
+                        <i style="font-size: 30px;" [ngClass]="item.faIcon"></i>
+                    </a>
+                </ng-template>
+            </div>
+        </div>
+        <div class="col-11 p-2">
+            <div class="border border-2 rounded-3 p-4" style="min-height: 100%;">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

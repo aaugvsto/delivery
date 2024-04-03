@@ -1,0 +1,19 @@
+a {
+    text-decoration: none;
+}
+
+.menu-item {
+    cursor: pointer;
+    
+    a {
+        color: #ffc107;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    :hover {
+        background-color: #ffc107;
+        color: #fff;
+    }
+}

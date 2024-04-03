@@ -23,28 +23,16 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpClient, private pedidoService: PedidosService){
   }
 
-  ngOnInit(): void {
-
-    this.pedidoService.getPedidos()  
-    .subscribe(pedidos => {
-      let colunas = this.colunas$.getValue();
-
-      pedidos.forEach(pedido => {
-        let coluna = colunas.find(c => c.id === pedido.status);
-
-        if(coluna)
-        coluna.pedidos.push(pedido);
-      });
-      
-      this.colunas$.next(colunas);
-    })
-
+  ngOnInit() {
+    this.getPedidoDashboard();
+    setInterval(() => this.getPedidoDashboard(), 5000)
   }
 
   onMovePedido(id: number){
     this.http
       .put(`${environment.apiUrl}/pedidos/${id}/AtualizaStatus`, null)
       .subscribe((res: any) => {
+
         let colunas = this.colunas$.getValue();
         for(let i = 0; i < colunas.length; i++){
           for(let j = 0; j < colunas[i].pedidos.length; j++){
@@ -57,6 +45,24 @@ export class DashboardComponent implements OnInit {
             }
           }
         }
+        
       })
+  }
+
+  getPedidoDashboard = async () : Promise<void> => {
+    this.pedidoService.getPedidos()  
+    .subscribe(pedidos => {
+      let colunas = this.colunas$.getValue();
+      
+      pedidos.forEach(pedido => {
+        let coluna = colunas.find(c => c.id === pedido.status);
+
+        let jaExiste = coluna!.pedidos.find(p => p.id === pedido.id);
+        if(coluna && !jaExiste)
+        coluna.pedidos.push(pedido);
+      });
+      
+      this.colunas$.next(colunas);
+    })
   }
 }

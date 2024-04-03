@@ -1,0 +1,20 @@
+<div style="min-height: 4vh; color: #fff;" class="bg-warning fw-bold d-flex justify-content-start align-items-center">
+    <span class="ps-2 fs-5 fw-bold" style="color: black;">Pedidos</span>
+  </div>
+  <div class="container-flex mt-2 m-4">
+    <div class="row align-items-start text-center">
+        <div class="col border me-3 rounded" style="min-height: 500vh; background-color: white;" *ngFor="let coluna of colunas$ | async">
+            <div class="mb-2 mt-2">
+                <span class="fs-5 fw-bold"> {{ coluna.textoDeExibicao }}</span>
+            </div>
+            <div *ngFor="let item of coluna.pedidos">
+               <app-card-pedido
+                [pedido]="item"
+                (movePedido)="onMovePedido(item.id)"
+                ></app-card-pedido> 
+            </div>
+        </div>
+    </div>
+  </div>
+
+
