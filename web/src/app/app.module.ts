@@ -8,6 +8,7 @@ import { LoginModule } from './pages/login/login.module';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CardapioModule } from './pages/cardapio/cardapio.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { CardapioModule } from './pages/cardapio/cardapio.module';
     DashboardModule,
     HttpClientModule,
     NgbModule,
-    CardapioModule
+    CardapioModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

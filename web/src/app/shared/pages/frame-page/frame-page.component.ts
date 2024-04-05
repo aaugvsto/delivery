@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from '../../models/menuitem.model';
+import { MenuItem } from '../../models/menu-item.model';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

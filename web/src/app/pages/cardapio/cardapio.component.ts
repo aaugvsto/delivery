@@ -1,26 +1,36 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ColumnCardapio } from 'src/app/shared/models/columncardapio.model';
-import { Produto } from 'src/app/shared/models/produto.model';
+import { Component, OnInit } from '@angular/core';
+import { CardapioService } from './services/cardapio.service';
+import { Observable } from 'rxjs';
+import { SessaoCardapio } from 'src/app/shared/models/sessao-cardapio.model';
 
 @Component({
   selector: 'app-cardapio',
   templateUrl: './cardapio.component.html',
   styleUrls: ['./cardapio.component.css']
 })
-export class CardapioComponent {
-  
-  colunas: ColumnCardapio[] = [
-    {id: 1, nomeColuna: "Lanches", produtos: [ { id: 1, nome: 'Teste', descricao: 'Teste', preco: 10, ativo: true }, { id: 1, nome: 'Teste', descricao: 'Teste', preco: 10, ativo: true }, { id: 1, nome: 'Teste', descricao: 'Teste', preco: 10, ativo: true } ]},
-    {id: 1, nomeColuna: "Bebidas", produtos: []},
-    {id: 1, nomeColuna: "Acrescimos", produtos: []},
-  ];
+export class CardapioComponent implements OnInit {
 
-  constructor(private modalService: NgbModal) { }
+  colunas: SessaoCardapio[];
+  loading: boolean = true;
 
-  @ViewChild('myModal') myModal : any;
+  constructor(
+    public cardapioService: CardapioService
+  )
+  {}
 
-  openModal() {
-      this.modalService.open(this.myModal);
+  ngOnInit(): void {
+
+    this.cardapioService.getColunas();
+
+    this.cardapioService.colunas$
+      .subscribe((valor: SessaoCardapio[]) => {
+        this.colunas = valor;
+      });
+
   }
+
+  openPopUpCriarEditarColuna() {
+    this.cardapioService.openPopUpCriarEditarSessao();
+  }
+
 }

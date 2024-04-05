@@ -1,28 +1,44 @@
-<header>
-    <span class="fs-3">Cardápio</span><hr>
+<header class="row">
+    <div class="col">
+        <span class="fs-3 fw-bold">Cardápio</span>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <app-button 
+            texto = "Nova sessão"
+            faIcon="fa-solid fa-add"
+            tipo="button"
+            (click)="openPopUpCriarEditarColuna()"
+        ></app-button>
+    </div>
 </header>
 
-<main>
-    <div class="row-group">
-        <div class="border coluna-cardapio" *ngFor="let item of colunas">
-            <div class="d-flex flex-column">
-                <div class="border-bottom">
-                    <span class="d-flex justify-content-center p-2 fs-4 bodr">
-                        {{ item.nomeColuna }}
-                    </span>
-                </div>
+<hr>
 
-                <div class="p-2 card-cardapio" (click)="openModal()" *ngFor="let produto of item.produtos">
-                    <div class="border border-dark d-flex flex-column rounded-3 mb-2">
-                        <img src="https://minervafoods.com/wp-content/uploads/2023/09/HamburguerAlcatraComBacon_1-scaled.jpg" alt="..." height="180px" class="border-bottom">
-                        <span class="p-2" style="text-align: center;">{{ produto.nome }}</span>
+<main>
+    <div *ngIf="loading; then colunasSession else loadingSession"></div>
+    
+    <ng-template #colunasSession>
+        <div class="row-group">
+            <div class="border coluna-cardapio" *ngFor="let item of colunas">
+                <div class="d-flex flex-column">
+                    <div class="border-bottom">
+                        <span class="d-flex justify-content-center p-2 fs-4 bodr">
+                            {{ item.nomeColuna }}
+                        </span>
+                    </div>
+    
+                    <div class="p-2 card-cardapio" *ngFor="let produto of item.produtos">
+                        <div class="border border-dark d-flex flex-column rounded-3 mb-2">
+                            <img src="https://minervafoods.com/wp-content/uploads/2023/09/HamburguerAlcatraComBacon_1-scaled.jpg" alt="..." height="180px" class="border-bottom">
+                            <span class="p-2" style="text-align: center;">{{ produto.nome }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </ng-template>
 
-<ng-template #myModal let-modal>
-    <h1>My Modal</h1>
-</ng-template>
+    <ng-template #loadingSession>
+        <app-loading></app-loading>
+    </ng-template>
+</main>
