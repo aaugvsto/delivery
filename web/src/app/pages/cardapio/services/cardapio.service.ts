@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { SessaoCardapio } from 'src/app/shared/models/sessao-cardapio.model';
 import { PopUpCriarEditarColunaComponent } from '../components/pop-up-criar-editar-coluna/pop-up-criar-editar-coluna.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,13 +9,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CardapioService {
 
-  adicionarSessao$ = new Observable<SessaoCardapio>();
-  colunas$ = new Observable<SessaoCardapio[]>((sub) => {
-    setTimeout(() => {
-      sub.next(this.getColunas());
-    }, 1000);
-  });
-
+  private colunasSubject: BehaviorSubject<SessaoCardapio[]> = new BehaviorSubject<SessaoCardapio[]>([]);
+  public colunas$: Observable<SessaoCardapio[]> = this.colunasSubject.asObservable();
 
   constructor(
     private modalService: NgbModal
@@ -27,15 +22,21 @@ export class CardapioService {
   }
 
   adicionarSessao(sessao: SessaoCardapio) {
-    //this.colunas$.next([...this.colunas$.value, sessao]);
+    const colunasAtuais = this.colunasSubject.getValue();
+    colunasAtuais.push(sessao);
+    this.colunasSubject.next(colunasAtuais);
   }
 
   getColunas(): SessaoCardapio[] {
-    return [
+    let columns = [
       {id: 1, nomeColuna: 'Entradas', produtos: []},
       {id: 1, nomeColuna: 'Entradas', produtos: []},
       {id: 1, nomeColuna: 'Entradas', produtos: []},
-    ]
+    ];
+    
+    this.colunasSubject.next(columns);
+
+    return columns; 
   }
   
 }

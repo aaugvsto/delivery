@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CardapioService } from '../../services/cardapio.service';
+import { SessaoCardapio } from 'src/app/shared/models/sessao-cardapio.model';
 
 @Component({
   selector: 'app-pop-up-criar-editar-coluna',
@@ -16,7 +17,7 @@ export class PopUpCriarEditarColunaComponent {
   nome: string = '';
 
   submitForm() {
-    this.cardapioService.adicionarSessao({id: 1, nomeColuna: this.nome, produtos: []});
+    this.cardapioService.adicionarSessao(new SessaoCardapio(this.nome, []));
   }
 
 }

@@ -15,22 +15,19 @@ export class CardapioComponent implements OnInit {
 
   constructor(
     public cardapioService: CardapioService
-  )
-  {}
+  ){}
 
   ngOnInit(): void {
-
     this.cardapioService.getColunas();
 
     this.cardapioService.colunas$
       .subscribe((valor: SessaoCardapio[]) => {
         this.colunas = valor;
+        console.log(this.colunas);
       });
-
   }
 
   openPopUpCriarEditarColuna() {
     this.cardapioService.openPopUpCriarEditarSessao();
   }
-
 }
