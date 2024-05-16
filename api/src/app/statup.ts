@@ -10,6 +10,10 @@ import PedidoController from "./controllers/pedido.controller";
 import PedidoService from "../domain/services/pedido.service";
 import ClienteService from "../domain/services/cliente.service.";
 import cors from "cors";
+import RestauranteCardapioService from "../domain/services/restaurante-cardapio.service";
+import RestauranteCardapio from "../infra/data_access/entities/restaurante-cardapio";
+import RestauranteCardapioSessao from "../infra/data_access/entities/restaurante-cardapio-sessao";
+import RestauranteCardapioSessaoService from "../domain/services/restaurante-cardapio-sessao.service";
 
 export default class Startup {
 
@@ -34,9 +38,22 @@ export default class Startup {
     private static initRoutes(routesEngine: Express, databaseEngine: DataSource){
         const port = process.env.PORT || 5454;
         
-        const clienteController = new ClienteController(express.Router(), new ClienteService(databaseEngine.getRepository(Cliente)));
-        const pedidoController = new PedidoController(express.Router(), new PedidoService(databaseEngine.getRepository(Pedido)));
-        const restauranteController = new RestauranteController(express.Router(), new RestauranteService(databaseEngine.getRepository(Restaurante)));
+        const clienteController = new ClienteController(
+            express.Router(), 
+            new ClienteService(databaseEngine.getRepository(Cliente))
+        );
+
+        const pedidoController = new PedidoController(
+            express.Router(), 
+            new PedidoService(databaseEngine.getRepository(Pedido))
+        );
+
+        const restauranteController = new RestauranteController(
+            express.Router(), 
+            new RestauranteService(databaseEngine.getRepository(Restaurante)), 
+            new RestauranteCardapioService(databaseEngine.getRepository(RestauranteCardapio)), 
+            new RestauranteCardapioSessaoService(databaseEngine.getRepository(RestauranteCardapioSessao))
+        );
 
         routesEngine.use(cors());
         routesEngine.use(express.json())
@@ -54,7 +71,7 @@ export default class Startup {
         });
 
         routesEngine.listen(port, () => {
-            console.log(`[delivery-web-api]: Server is running at http://localhost:${port}`);
+            console.log(`[delivery-web-api]: Application is running 🚀`);
         });
     }
 
@@ -63,9 +80,11 @@ export default class Startup {
             type: "sqlite",
             database: "test.sqlite",
             entities: [
-              Restaurante
-              ,Pedido
-              ,Cliente
+                Restaurante,
+                Pedido,
+                Cliente,
+                RestauranteCardapio,
+                RestauranteCardapioSessao
             ],
             synchronize: true,
             logging: false,
